@@ -3,16 +3,20 @@ package com.motek.btsAnalisys.actors.manager;
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
+import akka.dispatch.OnComplete;
 import akka.dispatch.OnFailure;
 import akka.dispatch.OnSuccess;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import com.motek.btsAnalisys.actors.angel.AngelActor;
 import com.motek.btsAnalisys.actors.angel.commands.KillYourself;
+import com.motek.btsAnalisys.actors.event.command.PassEventRetry;
 import com.motek.btsAnalisys.actors.manager.commands.CreateAgent;
 import com.motek.btsAnalisys.actors.manager.commands.KillAgent;
+import com.motek.btsAnalisys.actors.manager.commands.RetryKill;
 import scala.concurrent.duration.FiniteDuration;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 public class ManagingActor extends AbstractActor {
@@ -42,17 +46,33 @@ public class ManagingActor extends AbstractActor {
                             }, context().dispatcher());
 
                 })
+                .match(RetryKill.class, retryKill -> {
+                    context().actorSelection(retryKill.getId())
+                            .resolveOne(new FiniteDuration(2, TimeUnit.SECONDS))
+                            .onComplete(new OnComplete<ActorRef>() {
+                                @Override
+                                public void onComplete(Throwable failure, ActorRef angel) throws Throwable {
+                                    if(failure == null ){
+                                        angel.tell(new KillYourself(questionaryActor), ActorRef.noSender());
+                                    }
+                                }
+                            }, context().dispatcher());
+                })
                 .match(KillAgent.class, killEvent -> {
                     log.info("Received angel[" + killEvent.getId() +  "] removal request");
                     context().actorSelection(killEvent.getId())
                             .resolveOne(new FiniteDuration(2, TimeUnit.SECONDS))
-                            .onSuccess(new OnSuccess<ActorRef>() {
+                            .onComplete(new OnComplete<ActorRef>() {
                                 @Override
-                                public void onSuccess(ActorRef angel) throws Throwable {
-                                    angel.tell(new KillYourself(questionaryActor), ActorRef.noSender());
+                                public void onComplete(Throwable failure, ActorRef angel) throws Throwable {
+                                    if(failure != null ){
+                                        context().system().scheduler().scheduleOnce(Duration.ofSeconds(2),
+                                                () -> context().self().tell(new RetryKill(killEvent.getId()), ActorRef.noSender()), context().dispatcher());
+                                    } else {
+                                        angel.tell(new KillYourself(questionaryActor), ActorRef.noSender());
+                                    }
                                 }
                             }, context().dispatcher());
-
                 })
                 .build();
     }

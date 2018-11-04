@@ -6,7 +6,7 @@ import akka.actor.PoisonPill;
 import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import com.motek.btsAnalisys.actors.angel.commands.BTSEvent;
+import com.motek.btsAnalisys.BTSEvents.BTSEvent;
 import com.motek.btsAnalisys.actors.angel.commands.CommitSuacide;
 import com.motek.btsAnalisys.actors.angel.commands.KillYourself;
 import com.motek.btsAnalisys.actors.questionary.commands.PrepareQuestionary;
