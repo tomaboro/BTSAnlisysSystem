@@ -2,11 +2,11 @@ package com.motek.btsAnalisys.actors.event.command;
 
 import com.motek.btsAnalisys.actors.angel.commands.BTSEvent;
 
-public class PassEvent {
+public class PassEventRetry {
     final BTSEvent event;
     final String angelID;
 
-    public PassEvent(BTSEvent event, String angelID) {
+    public PassEventRetry(BTSEvent event, String angelID) {
         this.event = event;
         this.angelID = angelID;
     }

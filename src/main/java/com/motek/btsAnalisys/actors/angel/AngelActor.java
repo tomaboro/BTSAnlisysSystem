@@ -2,13 +2,16 @@ package com.motek.btsAnalisys.actors.angel;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
+import akka.actor.PoisonPill;
 import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import com.motek.btsAnalisys.actors.angel.commands.BTSEvent;
+import com.motek.btsAnalisys.actors.angel.commands.CommitSuacide;
 import com.motek.btsAnalisys.actors.angel.commands.KillYourself;
 import com.motek.btsAnalisys.actors.questionary.commands.PrepareQuestionary;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +37,13 @@ public class AngelActor extends AbstractActor {
                     events.add(event);
                 })
                 .match(KillYourself.class, kill -> {
+                    context().system().scheduler().scheduleOnce(Duration.ofSeconds(5),
+                            () -> context().self().tell(new CommitSuacide(kill.getQuestionaryAgent()), ActorRef.noSender()), context().dispatcher());
+                })
+                .match(CommitSuacide.class, x -> {
                     log.info("Sending message to questionary and killing myself.");
-                    kill.getQuestionaryAgent().tell(new PrepareQuestionary(events), ActorRef.noSender());
+                    x.getQuestionaryAgent().tell(new PrepareQuestionary(events), ActorRef.noSender());
+                    context().self().tell(PoisonPill.getInstance(), ActorRef.noSender());
                 })
                 .build();
     }

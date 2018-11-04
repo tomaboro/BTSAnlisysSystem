@@ -17,7 +17,7 @@ public class Application {
     public static final String managingAgentID = "managing";
     public static final String eventAgentID = "event";
 
-    public void start() throws InterruptedException {
+    public void start(){
         ActorSystem system = ActorSystem.create("BTS-data-analisys-system");
 
         ActorRef questionaryAgent = system.actorOf(QuestionaryActor.props(),questionaryAgentID);
@@ -26,8 +26,6 @@ public class Application {
 
         final String id = "x12345";
         managingAgent.tell(new CreateAgent(id), ActorRef.noSender());
-        TimeUnit.SECONDS.sleep(1);
-
         eventAgent.tell(new PassEvent(new SomeBTSEvent(), id), ActorRef.noSender());
         eventAgent.tell(new PassEvent(new SomeBTSEvent(), id), ActorRef.noSender());
         eventAgent.tell(new PassEvent(new SomeBTSEvent(), id), ActorRef.noSender());
