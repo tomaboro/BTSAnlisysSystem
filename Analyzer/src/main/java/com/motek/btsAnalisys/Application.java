@@ -34,12 +34,18 @@ public class Application {
         List<BTSEvent> events = Arrays.asList(new UserEntered(id), new SomeBTSEvent(id), new SomeBTSEvent(id), new UserLeft(id));
         Source<BTSEvent, NotUsed> source = Source.from(events);
 
-        ActorMaterializer materializer = ActorMaterializer.create(system);
-        DefaultEventEmitter emitter1 = new DefaultEventEmitter(source, materializer, eventAgent);
-        EntranceEventEmitter emitter2 = new EntranceEventEmitter(source, materializer, managingAgent);
+        KafkaEventConsumer kafkaEventConsumer = new KafkaEventConsumer(eventAgent);
+        try {
+            kafkaEventConsumer.runEventConsumer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //ActorMaterializer materializer = ActorMaterializer.create(system);
+        //DefaultEventEmitter emitter1 = new DefaultEventEmitter(source, materializer, eventAgent);
+        //EntranceEventEmitter emitter2 = new EntranceEventEmitter(source, materializer, managingAgent);
 
-        emitter2.start();
-        emitter1.start();
+        //emitter2.start();
+        //emitter1.start();
 
         //managingAgent.tell(new CreateAgent(id), ActorRef.noSender());
         //eventAgent.tell(new PassEvent(new SomeBTSEvent(), id), ActorRef.noSender());
