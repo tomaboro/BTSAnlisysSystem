@@ -8,7 +8,7 @@ import akka.actor.ActorRef;
 import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Source;
 
-import com.motek.btsAnalisys.actors.event.command.PassEvent;
+import com.motek.btsAnalisys.actors.manager.commands.PassEvent;
 
 public class DefaultEventEmitter {
     private Source<BTSEvent, NotUsed> source;

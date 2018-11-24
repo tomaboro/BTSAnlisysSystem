@@ -3,22 +3,25 @@ package com.motek.btsAnalisys;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
-import java.util.Calendar;
 import java.util.Properties;
 import java.util.Arrays;
 
 import BTSEvents.BTSEvent;
+import BTSEvents.UserEntered;
+import BTSEvents.UserLeft;
 import akka.actor.ActorRef;
-import com.motek.btsAnalisys.actors.event.command.PassEvent;
+import com.motek.btsAnalisys.actors.manager.commands.CreateAgent;
+import com.motek.btsAnalisys.actors.manager.commands.KillAgent;
+import com.motek.btsAnalisys.actors.manager.commands.PassEvent;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 public class KafkaEventConsumer {
 
-    private ActorRef eventAgent;
+    private ActorRef managingAgent;
 
-    public KafkaEventConsumer(ActorRef eventAgent) {
-        this.eventAgent = eventAgent;
+    public KafkaEventConsumer(ActorRef managingAgent) {
+        this.managingAgent = managingAgent;
     }
 
 
@@ -53,11 +56,21 @@ public class KafkaEventConsumer {
 
                 ByteArrayInputStream bis = new ByteArrayInputStream(record.value());
                 ObjectInput in = new ObjectInputStream(bis);
-                BTSEvent btsEvent =  BTSEvent.class.cast(in.readObject());
+                BTSEvent btsEvent =  (BTSEvent)in.readObject();
                 // print the offset,key and value for the consumer records.
                 //if(btsEvent instanceof SomeBTSEvent)
                 //    System.out.println("hurray");
-                eventAgent.tell(new PassEvent(btsEvent,btsEvent.getId()), ActorRef.noSender());
+
+                if(btsEvent instanceof UserEntered){
+                    managingAgent.tell(new CreateAgent(btsEvent.getId()), ActorRef.noSender());
+                }
+                else if(btsEvent instanceof UserLeft){
+                    managingAgent.tell(new KillAgent(btsEvent.getId()), ActorRef.noSender());
+                }
+                else{
+                    managingAgent.tell(new PassEvent(btsEvent,btsEvent.getId()), ActorRef.noSender());
+                }
+
                 //System.out.printf("offset = %d, key = %s, value = %s\n",
                 //        record.offset(), record.key(), btsEvent.getId());
             }

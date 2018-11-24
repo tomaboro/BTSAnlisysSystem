@@ -9,7 +9,6 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Source;
-import com.motek.btsAnalisys.actors.event.EventActor;
 import com.motek.btsAnalisys.actors.manager.ManagingActor;
 import com.motek.btsAnalisys.actors.questionary.QuestionaryActor;
 import com.motek.btsAnalisys.eventEmitters.DefaultEventEmitter;
@@ -27,14 +26,13 @@ public class Application {
         ActorSystem system = ActorSystem.create("BTS-data-analisys-system");
 
         ActorRef questionaryAgent = system.actorOf(QuestionaryActor.props(),questionaryAgentID);
-        ActorRef eventAgent = system.actorOf(EventActor.props(),eventAgentID);
         ActorRef managingAgent = system.actorOf(ManagingActor.props(questionaryAgent),managingAgentID);
 
         //final String id = "x12345";
         //List<BTSEvent> events = Arrays.asList(new UserEntered(id), new SomeBTSEvent(id), new SomeBTSEvent(id), new UserLeft(id));
         //Source<BTSEvent, NotUsed> source = Source.from(events);
 
-        KafkaEventConsumer kafkaEventConsumer = new KafkaEventConsumer(eventAgent);
+        KafkaEventConsumer kafkaEventConsumer = new KafkaEventConsumer(managingAgent);
         try {
             kafkaEventConsumer.runEventConsumer();
         } catch (Exception e) {

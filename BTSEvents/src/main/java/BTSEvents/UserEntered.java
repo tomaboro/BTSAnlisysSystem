@@ -1,9 +1,13 @@
 package BTSEvents;
 
-public class UserEntered implements BTSEvent {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
+
+public class UserEntered implements BTSEvent, Serializable {
     private final String id;
 
-    public UserEntered(String id) {
+    public UserEntered(@JsonProperty("id") String id) {
         this.id = id;
     }
 
