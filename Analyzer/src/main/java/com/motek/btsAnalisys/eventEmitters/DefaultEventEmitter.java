@@ -1,12 +1,13 @@
 package com.motek.btsAnalisys.eventEmitters;
 
+import BTSEvents.BTSEvent;
+import BTSEvents.UserEntered;
+import BTSEvents.UserLeft;
 import akka.NotUsed;
 import akka.actor.ActorRef;
 import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Source;
-import com.motek.btsAnalisys.BTSEvents.BTSEvent;
-import com.motek.btsAnalisys.BTSEvents.UserEntered;
-import com.motek.btsAnalisys.BTSEvents.UserLeft;
+
 import com.motek.btsAnalisys.actors.event.command.PassEvent;
 
 public class DefaultEventEmitter {

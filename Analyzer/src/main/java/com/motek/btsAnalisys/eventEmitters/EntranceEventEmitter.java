@@ -1,12 +1,12 @@
 package com.motek.btsAnalisys.eventEmitters;
 
+import BTSEvents.BTSEvent;
+import BTSEvents.UserEntered;
+import BTSEvents.UserLeft;
 import akka.NotUsed;
 import akka.actor.ActorRef;
 import akka.stream.*;
 import akka.stream.javadsl.*;
-import com.motek.btsAnalisys.BTSEvents.BTSEvent;
-import com.motek.btsAnalisys.BTSEvents.UserEntered;
-import com.motek.btsAnalisys.BTSEvents.UserLeft;
 import com.motek.btsAnalisys.actors.manager.commands.CreateAgent;
 import com.motek.btsAnalisys.actors.manager.commands.KillAgent;
 

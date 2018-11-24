@@ -1,6 +1,6 @@
 package com.motek.btsAnalisys.actors.event.command;
 
-import com.motek.btsAnalisys.BTSEvents.BTSEvent;
+import BTSEvents.BTSEvent;
 
 public class PassEventRetry {
     final BTSEvent event;

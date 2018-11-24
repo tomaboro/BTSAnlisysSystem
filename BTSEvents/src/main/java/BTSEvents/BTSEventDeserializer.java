@@ -1,4 +1,4 @@
-package com.motek.btsAnalisys.BTSEvents;
+package BTSEvents;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.serialization.Deserializer;

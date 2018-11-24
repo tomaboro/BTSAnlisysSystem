@@ -1,6 +1,6 @@
+import BTSEvents.BTSEvent;
+import BTSEvents.SomeBTSEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.motek.btsAnalisys.BTSEvents.BTSEvent;
-import com.motek.btsAnalisys.BTSEvents.SomeBTSEvent;
 import org.apache.kafka.common.serialization.Serializer;
 
 import java.util.Map;

@@ -1,6 +1,6 @@
 package com.motek.btsAnalisys.actors.questionary.commands;
 
-import com.motek.btsAnalisys.BTSEvents.BTSEvent;
+import BTSEvents.BTSEvent;
 
 import java.util.List;
 

@@ -1,14 +1,14 @@
 package com.motek.btsAnalisys;
 
+import BTSEvents.BTSEvent;
+import BTSEvents.SomeBTSEvent;
+import BTSEvents.UserEntered;
+import BTSEvents.UserLeft;
 import akka.NotUsed;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.stream.ActorMaterializer;
 import akka.stream.javadsl.Source;
-import com.motek.btsAnalisys.BTSEvents.BTSEvent;
-import com.motek.btsAnalisys.BTSEvents.SomeBTSEvent;
-import com.motek.btsAnalisys.BTSEvents.UserEntered;
-import com.motek.btsAnalisys.BTSEvents.UserLeft;
 import com.motek.btsAnalisys.actors.event.EventActor;
 import com.motek.btsAnalisys.actors.manager.ManagingActor;
 import com.motek.btsAnalisys.actors.questionary.QuestionaryActor;
@@ -30,9 +30,9 @@ public class Application {
         ActorRef eventAgent = system.actorOf(EventActor.props(),eventAgentID);
         ActorRef managingAgent = system.actorOf(ManagingActor.props(questionaryAgent),managingAgentID);
 
-        final String id = "x12345";
-        List<BTSEvent> events = Arrays.asList(new UserEntered(id), new SomeBTSEvent(id), new SomeBTSEvent(id), new UserLeft(id));
-        Source<BTSEvent, NotUsed> source = Source.from(events);
+        //final String id = "x12345";
+        //List<BTSEvent> events = Arrays.asList(new UserEntered(id), new SomeBTSEvent(id), new SomeBTSEvent(id), new UserLeft(id));
+        //Source<BTSEvent, NotUsed> source = Source.from(events);
 
         KafkaEventConsumer kafkaEventConsumer = new KafkaEventConsumer(eventAgent);
         try {

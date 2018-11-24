@@ -1,4 +1,4 @@
-package com.motek.btsAnalisys.BTSEvents;
+package BTSEvents;
 
 public interface BTSEvent {
     String getId();

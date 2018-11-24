@@ -1,2 +1,5 @@
 rootProject.name = 'btsAnlisysSystem'
 
+include ':BTSEvents'
+project(':BTSEvents').projectDir = new File('../BTSEvents')
+

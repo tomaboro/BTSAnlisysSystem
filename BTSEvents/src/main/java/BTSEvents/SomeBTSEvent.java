@@ -1,8 +1,7 @@
-package com.motek.btsAnalisys.BTSEvents;
+package BTSEvents;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.motek.btsAnalisys.BTSEvents.BTSEvent;
 
 import java.io.Serializable;
 

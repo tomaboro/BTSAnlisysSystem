@@ -7,9 +7,8 @@ import java.util.Calendar;
 import java.util.Properties;
 import java.util.Arrays;
 
+import BTSEvents.BTSEvent;
 import akka.actor.ActorRef;
-import com.motek.btsAnalisys.BTSEvents.BTSEvent;
-import com.motek.btsAnalisys.BTSEvents.SomeBTSEvent;
 import com.motek.btsAnalisys.actors.event.command.PassEvent;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;

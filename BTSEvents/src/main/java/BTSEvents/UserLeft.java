@@ -1,4 +1,4 @@
-package com.motek.btsAnalisys.BTSEvents;
+package BTSEvents;
 
 public class UserLeft implements BTSEvent {
     private final String id;
