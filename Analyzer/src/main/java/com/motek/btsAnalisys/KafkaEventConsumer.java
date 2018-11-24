@@ -3,6 +3,7 @@ package com.motek.btsAnalisys;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
+import java.time.Duration;
 import java.util.Properties;
 import java.util.Arrays;
 
@@ -50,7 +51,7 @@ public class KafkaEventConsumer {
         int i = 0;
 
         while (true) {
-            ConsumerRecords<String, byte[]> records = consumer.poll(100);
+            ConsumerRecords<String, byte[]> records = consumer.poll(Duration.ofSeconds(1));
 
             for (ConsumerRecord<String, byte[]> record : records) {
 

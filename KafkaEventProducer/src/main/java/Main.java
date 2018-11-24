@@ -1,12 +1,19 @@
+import BTSEvents.BTSEvent;
 import BTSEvents.SomeBTSEvent;
+import BTSEvents.UserEntered;
+import BTSEvents.UserLeft;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) throws Exception{
@@ -44,19 +51,28 @@ public class Main {
         Producer<String, byte[]> producer = new KafkaProducer
                 <String, byte[]>(props);
 
-        SomeBTSEvent event = new SomeBTSEvent("abc");
+        String id = "abc";
+        List<BTSEvent> events = Arrays.asList(new UserEntered(id), new SomeBTSEvent(id), new SomeBTSEvent(id), new UserLeft(id));
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutput out = new ObjectOutputStream(bos);
-        out.writeObject(event);
-        byte b[] = bos.toByteArray();
-        out.close();
-        bos.close();
-        //new ProducerRecord<String, byte[]>()
-        for(int i = 0; i < 10; i++)
+        for(BTSEvent event : events){
+            byte[] serializedEvent = serializeBTSEvent(event);
             producer.send(new ProducerRecord<String, byte[]>(topicName,
-                    event.getClass().toString(), b));
-        System.out.println("Message sent successfully");
+                    event.getClass().toString(), serializedEvent));
+            System.out.println("Message sent successfully");
+
+            TimeUnit.SECONDS.sleep(2);
+        }
+
         producer.close();
+    }
+
+    static byte [] serializeBTSEvent(BTSEvent event) throws IOException {
+        try(ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ObjectOutput out = new ObjectOutputStream(bos)){
+            out.writeObject(event);
+            byte b[] = bos.toByteArray();
+            return b;
+        }
+
     }
 }
