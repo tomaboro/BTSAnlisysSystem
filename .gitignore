@@ -1,3 +1,5 @@
 .idea
 .gradle
 *.class
+zookeeper-logs/
+kafka-logs/
