@@ -1,3 +1,5 @@
+package EventProducer;
+
 import BTSEvents.BTSEvent;
 import BTSEvents.SomeBTSEvent;
 import BTSEvents.UserEntered;
@@ -15,14 +17,36 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-public class Main {
-    public static void main(String[] args) throws Exception{
+public class KafkaEventProducer {
 
-        //Assign topicName to string variable
-        String topicName = "test3";
+    private String topicName;
+    private Properties props;
+    private Producer<String, byte[]> producer;
 
+    public KafkaEventProducer(String topicName) {
+        this.topicName = topicName;
+        initialize();
+    }
+
+    public void start() throws IOException, InterruptedException {
+        String id = "abc";
+        List<BTSEvent> events = Arrays.asList(new UserEntered(id), new SomeBTSEvent(id), new SomeBTSEvent(id), new UserLeft(id));
+
+        for(BTSEvent event : events){
+            byte[] serializedEvent = serializeBTSEvent(event);
+            producer.send(new ProducerRecord<String, byte[]>(topicName,
+                    event.getClass().toString(), serializedEvent));
+            System.out.println("Message sent successfully");
+
+            TimeUnit.SECONDS.sleep(2);
+        }
+
+        producer.close();
+    }
+
+    private void initialize(){
         // create instance for properties to access producer configs
-        Properties props = new Properties();
+        props = new Properties();
 
         //Assign localhost id
         props.put("bootstrap.servers", "localhost:9092");
@@ -48,31 +72,15 @@ public class Main {
         props.put("value.serializer",
                 "org.apache.kafka.common.serialization.ByteArraySerializer");
 
-        Producer<String, byte[]> producer = new KafkaProducer
-                <String, byte[]>(props);
-
-        String id = "abc";
-        List<BTSEvent> events = Arrays.asList(new UserEntered(id), new SomeBTSEvent(id), new SomeBTSEvent(id), new UserLeft(id));
-
-        for(BTSEvent event : events){
-            byte[] serializedEvent = serializeBTSEvent(event);
-            producer.send(new ProducerRecord<String, byte[]>(topicName,
-                    event.getClass().toString(), serializedEvent));
-            System.out.println("Message sent successfully");
-
-            TimeUnit.SECONDS.sleep(2);
-        }
-
-        producer.close();
+        producer = new KafkaProducer<String, byte[]>(props);
     }
 
     static byte [] serializeBTSEvent(BTSEvent event) throws IOException {
-        try(ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                ObjectOutput out = new ObjectOutputStream(bos)){
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutput out = new ObjectOutputStream(bos)) {
             out.writeObject(event);
             byte b[] = bos.toByteArray();
             return b;
         }
-
     }
 }
