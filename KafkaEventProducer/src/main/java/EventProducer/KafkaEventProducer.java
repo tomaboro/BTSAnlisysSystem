@@ -9,6 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -27,8 +28,8 @@ public class KafkaEventProducer {
 
     public void start() throws IOException, InterruptedException {
         String id = "abc";
-        List<BTSEvent> events = Arrays.asList(new EnteredBTSArea(id,19.934847,50.054043), new Sms(id,19.934847,50.054043),
-                new Sms(id,19.934847,50.054043), new LeftBTSArea(id,19.934847,50.054043));
+        List<BTSEvent> events = Arrays.asList(new EnteredBTSArea(id,19.934847,50.054043, LocalDateTime.now()), new Sms(id,19.934847,50.054043, LocalDateTime.now()),
+                new Sms(id,19.934847,50.054043, LocalDateTime.now()), new LeftBTSArea(id,19.934847,50.054043, LocalDateTime.now()));
 
         for(BTSEvent event : events){
             byte[] serializedEvent = serializeBTSEvent(event);
