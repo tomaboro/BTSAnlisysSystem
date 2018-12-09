@@ -1,11 +1,11 @@
 package com.motek.btsAnalisys.actors.angel.commands;
 
-import akka.actor.ActorRef;
+import BTSEvents.BTSEvent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class KillYourself {
-    private final ActorRef questionaryAgent;
+public class AddEvent {
+    private BTSEvent event;
 }

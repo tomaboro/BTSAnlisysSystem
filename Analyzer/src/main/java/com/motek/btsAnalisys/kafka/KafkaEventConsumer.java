@@ -1,4 +1,4 @@
-package com.motek.btsAnalisys;
+package com.motek.btsAnalisys.kafka;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInput;

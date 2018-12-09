@@ -1,13 +1,10 @@
 package com.motek.btsAnalisys.actors.manager.commands;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
 public class CreateAgent {
     private final String id;
-
-    public CreateAgent(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
 }
