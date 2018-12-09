@@ -10,6 +10,7 @@ import akka.stream.javadsl.Source;
 
 import com.motek.btsAnalisys.actors.manager.commands.PassEvent;
 
+@Deprecated
 public class DefaultEventEmitter {
     private Source<BTSEvent, NotUsed> source;
     private ActorMaterializer materializer;

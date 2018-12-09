@@ -10,6 +10,7 @@ import akka.stream.javadsl.*;
 import com.motek.btsAnalisys.actors.manager.commands.CreateAgent;
 import com.motek.btsAnalisys.actors.manager.commands.KillAgent;
 
+@Deprecated
 public class EntranceEventEmitter {
     private Source<BTSEvent, NotUsed> source;
     private ActorMaterializer materializer;
