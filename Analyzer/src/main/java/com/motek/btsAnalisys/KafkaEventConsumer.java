@@ -28,7 +28,7 @@ public class KafkaEventConsumer {
 
     public  void runEventConsumer() throws Exception {
         //Kafka consumer configuration settings
-        String topicName = "test3";
+        String topicName = "event-topic";
         Properties props = new Properties();
 
         props.put("bootstrap.servers", "localhost:9092");
