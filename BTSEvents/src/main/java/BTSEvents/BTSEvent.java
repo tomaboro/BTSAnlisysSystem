@@ -8,9 +8,13 @@ import java.time.LocalDateTime;
 @Getter
 public abstract class BTSEvent implements Serializable {
     private final String id;
-    private final double longitude;
-    private final double latitude;
-    private final LocalDateTime localDateTime;
+    private double longitude;
+    private double latitude;
+    private LocalDateTime localDateTime;
+
+    public BTSEvent(String id){
+        this.id = id;
+    }
 
     public BTSEvent(String id, double longitude, double latitude, LocalDateTime localDateTime) {
         this.id = id;
