@@ -1,11 +1,11 @@
 package com.motek.btsAnalisys.actors.event.response;
 
-import com.motek.btsAnalisys.utils.Location;
+import utils.Place;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
 public class DecodedEvent {
-    Location location;
+    Place location;
 }
