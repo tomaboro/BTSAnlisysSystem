@@ -1,4 +1,0 @@
-rootProject.name = 'KafkaEventProducer'
-
-include ':BTSEvents'
-project(':BTSEvents').projectDir = new File('../BTSEvents')

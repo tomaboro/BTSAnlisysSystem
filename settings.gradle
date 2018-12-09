@@ -1,0 +1,2 @@
+rootProject.name = 'btsAnalisysSystem'
+include 'KafkaEventProducer', 'BTSEvents', 'Analyzer'
