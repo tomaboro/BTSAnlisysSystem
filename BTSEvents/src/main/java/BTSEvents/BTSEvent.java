@@ -1,10 +1,11 @@
 package BTSEvents;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.Serializable;
+
 @Getter
-public abstract class BTSEvent {
+public abstract class BTSEvent implements Serializable {
     private final String id;
     private final double longitude;
     private final double latitude;
