@@ -7,9 +7,7 @@ import java.time.Duration;
 import java.util.Properties;
 import java.util.Arrays;
 
-import BTSEvents.BTSEvent;
-import BTSEvents.EnteredBTSArea;
-import BTSEvents.LeftBTSArea;
+import BTSEvents.*;
 import akka.actor.ActorRef;
 import com.motek.btsAnalisys.actors.manager.commands.CreateAgent;
 import com.motek.btsAnalisys.actors.manager.commands.KillAgent;
@@ -63,10 +61,10 @@ public class KafkaEventConsumer {
                 //    System.out.println("hurray");
 
 
-                if(btsEvent instanceof EnteredBTSArea){
+                if(btsEvent instanceof UserEntered){
                     managingAgent.tell(new CreateAgent(btsEvent.getId()), ActorRef.noSender());
                 }
-                else if(btsEvent instanceof LeftBTSArea){
+                else if(btsEvent instanceof UserExited){
                     managingAgent.tell(new KillAgent(btsEvent.getId()), ActorRef.noSender());
                 }
                 else{
