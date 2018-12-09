@@ -4,6 +4,8 @@ import BTSEvents.*;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import utils.Place;
+import utils.Places;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class KafkaEventProducer {
@@ -28,17 +31,35 @@ public class KafkaEventProducer {
 
     public void start() throws IOException, InterruptedException {
         String id = "abc";
-        List<BTSEvent> events = Arrays.asList(new EnteredBTSArea(id,19.934847,50.054043, LocalDateTime.now()), new Sms(id,19.934847,50.054043, LocalDateTime.now()),
-                new Sms(id,19.934847,50.054043, LocalDateTime.now()), new LeftBTSArea(id,19.934847,50.054043, LocalDateTime.now()));
 
-        for(BTSEvent event : events){
-            byte[] serializedEvent = serializeBTSEvent(event);
+        // Entry event
+        Place randomPlace = Places.RandomEntryPlace();
+        BTSEvent event = new EnteredBTSArea(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
+        byte[] serializedEvent = serializeBTSEvent(event);
+        producer.send(new ProducerRecord<String, byte[]>(topicName,
+                event.getClass().toString(), serializedEvent));
+        System.out.println("Message sent successfully");
+        TimeUnit.SECONDS.sleep(5);
+
+        //Normal events
+        for(int i = 0; i < 10; i++){
+
+            event = createRandomBTSEvent(id);
+            serializedEvent = serializeBTSEvent(event);
             producer.send(new ProducerRecord<String, byte[]>(topicName,
                     event.getClass().toString(), serializedEvent));
             System.out.println("Message sent successfully");
 
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(3);
         }
+
+        // Exit event
+        randomPlace = Places.RandomEntryPlace();
+        event = new LeftBTSArea(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
+        serializedEvent = serializeBTSEvent(event);
+        producer.send(new ProducerRecord<String, byte[]>(topicName,
+                event.getClass().toString(), serializedEvent));
+        System.out.println("Message sent successfully");
 
         producer.close();
     }
@@ -82,4 +103,18 @@ public class KafkaEventProducer {
             return b;
         }
     }
+
+    static BTSEvent createRandomBTSEvent(String id){
+        Place randomPlace = Places.RandomPlace();
+        Random random = new Random();
+        switch (random.nextInt(2)){
+            case 0:
+                return new PhoneCall(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
+            case 1:
+                return new Sms(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
+        }
+        return null;
+    }
+
+
 }
