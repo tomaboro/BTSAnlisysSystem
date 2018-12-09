@@ -36,28 +36,28 @@ public class KafkaEventProducer {
 
         // Entry event
         event = new UserEntered(id);
-        serializeAndSend(event,producer,id,5);
+        serializeAndSend(event,producer,topicName,5);
 
 
         // first location
         Place randomPlace = Places.RandomEntryPlace();
         event = new EnteredBTSArea(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
-        serializeAndSend(event,producer,id,5);
+        serializeAndSend(event,producer,topicName,5);
 
         //Normal events
         for(int i = 0; i < 10; i++){
             event = createRandomBTSEvent(id);
-            serializeAndSend(event,producer,id,3);
+            serializeAndSend(event,producer,topicName,3);
         }
 
         // last location
         randomPlace = Places.RandomEntryPlace();
         event = new LeftBTSArea(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
-        serializeAndSend(event,producer,id,5);
+        serializeAndSend(event,producer,topicName,5);
 
         // exit event
         event = new UserExited(id);
-        serializeAndSend(event,producer,id,5);
+        serializeAndSend(event,producer,topicName,5);
 
         producer.close();
     }
