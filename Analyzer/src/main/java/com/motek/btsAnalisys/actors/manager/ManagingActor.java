@@ -22,8 +22,10 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 public class ManagingActor extends AbstractActor {
-    private static final String questionaryAgentID = "questionary";
+    public static final String questionaryAgentID = "questionary";
     public static final String eventAgentID = "event";
+    public static final String managingAgentID = "managing";
+
 
     private LoggingAdapter log = Logging.getLogger(getContext().system(), this);
     private ActorRef questionaryActor;
@@ -52,7 +54,7 @@ public class ManagingActor extends AbstractActor {
                 })
                 .match(PassEvent.class, passEvent -> {
                     log.info("Received event " + passEvent.getEvent() + " to pass to angel[" + passEvent.getAngelID() + "]");
-                    context().actorSelection("../" + Application.managingAgentID + "/" + passEvent.getAngelID())
+                    context().actorSelection("../" + managingAgentID + "/" + passEvent.getAngelID())
                             .resolveOne(new FiniteDuration(2, TimeUnit.SECONDS))
                             .onComplete(new OnComplete<ActorRef>() {
                                 @Override

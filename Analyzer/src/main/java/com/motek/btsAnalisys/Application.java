@@ -6,11 +6,10 @@ import com.motek.btsAnalisys.actors.manager.ManagingActor;
 import com.motek.btsAnalisys.kafka.KafkaEventConsumer;
 
 public class Application {
-    private static final String managingAgentID = "managing";
 
     public void start(){
         ActorSystem system = ActorSystem.create("BTS-data-analisys-system");
-        ActorRef managingAgent = system.actorOf(ManagingActor.props(),managingAgentID);
+        ActorRef managingAgent = system.actorOf(ManagingActor.props(),ManagingActor.managingAgentID);
 
         KafkaEventConsumer kafkaEventConsumer = new KafkaEventConsumer(managingAgent);
         try {
