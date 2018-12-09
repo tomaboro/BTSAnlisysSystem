@@ -11,6 +11,7 @@ import com.motek.btsAnalisys.Application;
 import com.motek.btsAnalisys.actors.angel.AngelActor;
 import com.motek.btsAnalisys.actors.angel.commands.AddEvent;
 import com.motek.btsAnalisys.actors.angel.commands.KillYourself;
+import com.motek.btsAnalisys.actors.event.EventActor;
 import com.motek.btsAnalisys.actors.manager.commands.PassEvent;
 import com.motek.btsAnalisys.actors.manager.commands.CreateAgent;
 import com.motek.btsAnalisys.actors.manager.commands.KillAgent;
@@ -22,13 +23,17 @@ import java.util.concurrent.TimeUnit;
 
 public class ManagingActor extends AbstractActor {
     private static final String questionaryAgentID = "questionary";
+    public static final String eventAgentID = "event";
+
     private LoggingAdapter log = Logging.getLogger(getContext().system(), this);
     private ActorRef questionaryActor;
+    private ActorRef eventsActor;
 
     @Override
     public void preStart() {
         log.info("Managing actor started.");
         questionaryActor = getContext().actorOf(QuestionaryActor.props(),questionaryAgentID);
+        eventsActor = getContext().actorOf(EventActor.props(),eventAgentID);
     }
 
     @Override
@@ -63,7 +68,7 @@ public class ManagingActor extends AbstractActor {
                             .onComplete(new OnComplete<ActorRef>() {
                                 @Override
                                 public void onComplete(Throwable failure, ActorRef angel) throws Throwable {
-                                        angel.tell(new KillYourself(questionaryActor), ActorRef.noSender());
+                                        angel.tell(new KillYourself(questionaryActor,eventsActor), ActorRef.noSender());
                                 }
                             }, context().dispatcher());
                 })

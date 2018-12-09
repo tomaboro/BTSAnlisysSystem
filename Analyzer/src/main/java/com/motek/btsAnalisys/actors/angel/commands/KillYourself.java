@@ -7,5 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class KillYourself {
-    private final ActorRef questionaryAgent;
+    private final ActorRef questionaryActor;
+    private final ActorRef eventsActor;
 }
