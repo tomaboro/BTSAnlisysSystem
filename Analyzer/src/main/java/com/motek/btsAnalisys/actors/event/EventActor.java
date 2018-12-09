@@ -33,7 +33,7 @@ public class EventActor extends AbstractLoggingActor {
             else {
                 place = new Place(location, Place.LocationType.unknown, "");
             }
-            getSender().tell(new DecodedEvent(new ProcessedEvent(place,decodeEvent.getEvent().getTime())),getSelf());
+            getSender().tell(new DecodedEvent(new ProcessedEvent(place,decodeEvent.getEvent().getLocalDateTime())),getSelf());
         }).build();
     }
 
