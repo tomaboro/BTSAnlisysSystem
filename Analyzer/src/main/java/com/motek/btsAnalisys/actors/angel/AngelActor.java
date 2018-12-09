@@ -9,6 +9,9 @@ import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import com.motek.btsAnalisys.actors.angel.commands.AddEvent;
 import com.motek.btsAnalisys.actors.angel.commands.KillYourself;
+import com.motek.btsAnalisys.actors.processor.ProcessorActor;
+import com.motek.btsAnalisys.actors.processor.command.ProcessEvents;
+import com.motek.btsAnalisys.actors.processor.response.EventsProcessed;
 import com.motek.btsAnalisys.actors.questionary.commands.PrepareQuestionary;
 
 import java.util.ArrayList;
@@ -18,6 +21,9 @@ public class AngelActor extends AbstractActor {
     private String id;
     private List<BTSEvent> events = new ArrayList<>();
     private LoggingAdapter log = Logging.getLogger(getContext().system(), this);
+    private ActorRef processorActor = null;
+    private ActorRef questionaryActor = null;
+    private ActorRef eventsActor = null;
 
     public AngelActor(String id) {
         this.id = id;
@@ -36,9 +42,16 @@ public class AngelActor extends AbstractActor {
                     events.add(addEvent.getEvent());
                 })
                 .match(KillYourself.class, kill -> {
-                    log.info("Sending message to questionary and killing myself.");
-                    kill.getQuestionaryAgent().tell(new PrepareQuestionary(events), ActorRef.noSender());
-                    context().self().tell(PoisonPill.getInstance(), ActorRef.noSender());
+                    log.info("Started processing data.");
+                    questionaryActor = kill.getQuestionaryActor();
+                    processorActor = getContext().actorOf(ProcessorActor.props());
+                    processorActor.tell(new ProcessEvents(events,kill.getEventsActor()),getSelf());
+                })
+                .match(EventsProcessed.class, processedEvents -> {
+                    if(questionaryActor != null) {
+                        questionaryActor.tell(new PrepareQuestionary(processedEvents.getLocations()), getSelf());
+                        context().self().tell(PoisonPill.getInstance(), ActorRef.noSender());
+                    }
                 })
                 .build();
     }
