@@ -110,11 +110,10 @@ public class KafkaEventProducer {
         switch (random.nextInt(2)){
             case 0:
                 return new PhoneCall(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
-                break;
             case 1:
                 return new Sms(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
-                break;
         }
+        return null;
     }
 
 
