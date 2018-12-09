@@ -1,6 +1,6 @@
 package com.motek.btsAnalisys.actors.processor.response;
 
-import com.motek.btsAnalisys.utils.Location;
+import utils.Place;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,9 +9,9 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class EventsProcessed {
-    List<Location> locations;
+    List<Place> locations;
 
-    public void addLocation(Location location) {
+    public void addLocation(Place location) {
         locations.add(location);
     }
 }
