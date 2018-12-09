@@ -25,11 +25,11 @@ public class EventActor extends AbstractLoggingActor {
             log.info("Decoding event: " + decodeEvent.getEvent().toString());
             SimpleLocation location = new SimpleLocation((long) decodeEvent.getEvent().getLatitude(),(long) decodeEvent.getEvent().getLongitude());
             Place place;
-            if((place = Places.airports.get(location)) != null) { }
-            else if((place = Places.trainStations.get(location)) != null) { }
-            else if((place = Places.busStations.get(location)) != null) { }
-            else if((place = Places.hotels.get(location)) != null) { }
-            else if((place = Places.hostels.get(location)) != null) { }
+            if((place = Places.airports.stream().filter(x -> x.getLocation().equals(location)).findFirst().orElse(null)) != null) { }
+            else if((place = Places.trainStations.stream().filter(x -> x.getLocation().equals(location)).findFirst().orElse(null)) != null) { }
+            else if((place = Places.busStations.stream().filter(x -> x.getLocation().equals(location)).findFirst().orElse(null)) != null) { }
+            else if((place = Places.hotels.stream().filter(x -> x.getLocation().equals(location)).findFirst().orElse(null)) != null) { }
+            else if((place = Places.hostels.stream().filter(x -> x.getLocation().equals(location)).findFirst().orElse(null)) != null) { }
             else {
                 place = new Place(location, Place.LocationType.unknown, "");
             }
