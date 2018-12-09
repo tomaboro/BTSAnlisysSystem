@@ -35,10 +35,7 @@ public class QuestionaryActor extends AbstractActor {
                     List<Place> places = request.getEvents().stream().map(ProcessedEvent::getPlace).collect(Collectors.toList());
                     Questionary questionary = new Questionary(isTourist(places),!isTourist(places),findArrivalType(places),isParyting(request.getEvents()));
                     questionaries.add(questionary);
-                    log.info("======================================================\n" +
-                            "Questionary result: \n"
-                            + questionary.toString() +
-                            "=======================================================");
+                    log.info("Questionary result: " + questionary.toString());
                 })
                 .build();
     }

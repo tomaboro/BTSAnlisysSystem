@@ -49,7 +49,7 @@ public class ProcessorActor extends AbstractActor {
     }
 
     public static Props props() {
-        return Props.create(QuestionaryActor.class);
+        return Props.create(ProcessorActor.class);
     }
 
 }
