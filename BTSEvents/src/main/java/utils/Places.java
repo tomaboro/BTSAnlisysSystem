@@ -10,6 +10,7 @@ public abstract class Places {
     public static final Map<SimpleLocation,Place> busStations;
     public static final Map<SimpleLocation,Place> airports;
     public static final Map<SimpleLocation,Place> monuments;
+    public static final Map<SimpleLocation,Place> clubs;
 
     static {
         hotels = new HashMap<>();
@@ -18,5 +19,6 @@ public abstract class Places {
         busStations = new HashMap<>();
         airports = new HashMap<>();
         monuments = new HashMap<>();
+        clubs = new HashMap<>();
     }
 }

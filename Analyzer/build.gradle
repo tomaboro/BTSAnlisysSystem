@@ -14,6 +14,7 @@ repositories {
 dependencies {
     compile group: 'com.typesafe.akka', name: 'akka-actor_2.12', version: '2.5.17'
     compile group: 'com.typesafe.akka', name: 'akka-stream_2.12', version: '2.5.17'
+    compile group: 'com.typesafe.akka', name: 'akka-http_2.12',   version: '10.1.5'
     compile group: 'org.apache.kafka', name: 'kafka_2.11', version: '2.0.1'
     compile project(":BTSEvents")
     compile 'org.projectlombok:lombok:1.18.4'

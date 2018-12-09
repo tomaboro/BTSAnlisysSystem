@@ -42,14 +42,15 @@ public class AngelActor extends AbstractActor {
                     events.add(addEvent.getEvent());
                 })
                 .match(KillYourself.class, kill -> {
-                    log.info("Started processing data.");
+                    log.info("Started seasides process.");
                     questionaryActor = kill.getQuestionaryActor();
                     processorActor = getContext().actorOf(ProcessorActor.props());
                     processorActor.tell(new ProcessEvents(events,kill.getEventsActor()),getSelf());
                 })
                 .match(EventsProcessed.class, processedEvents -> {
                     if(questionaryActor != null) {
-                        questionaryActor.tell(new PrepareQuestionary(processedEvents.getLocations()), getSelf());
+                        log.info("Passing processed data to questionary agent and killing myself.");
+                        questionaryActor.tell(new PrepareQuestionary(processedEvents.getEvents()), getSelf());
                         context().self().tell(PoisonPill.getInstance(), ActorRef.noSender());
                     }
                 })

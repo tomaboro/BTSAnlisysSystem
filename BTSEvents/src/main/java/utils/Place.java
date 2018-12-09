@@ -8,7 +8,7 @@ import lombok.Getter;
 public class Place {
 
     public enum LocationType {
-        hotel, hostel, monument, airport, busStation, trainStation, unknown, error
+        hotel, hostel, monument, airport, busStation, trainStation, club, unknown, error
     }
 
     private SimpleLocation location;

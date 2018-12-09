@@ -1,7 +1,10 @@
 package com.motek.btsAnalisys.actors.processor;
 
+import akka.actor.AbstractActor;
 import akka.actor.AbstractLoggingActor;
 import akka.actor.Props;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
 import com.motek.btsAnalisys.actors.event.commands.DecodeEvent;
@@ -12,26 +15,35 @@ import com.motek.btsAnalisys.actors.questionary.QuestionaryActor;
 import utils.Place;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
+import utils.ProcessedEvent;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class ProcessorActor extends AbstractLoggingActor {
+public class ProcessorActor extends AbstractActor {
+    private LoggingAdapter log = Logging.getLogger(getContext().system(), this);
+
+    @Override
+    public void preStart() {
+        log.info("Processing actor started.");
+    }
 
     @Override
     public Receive createReceive() {
         return receiveBuilder().match(ProcessEvents.class, command -> {
-            List<Place> locations = command.getEvents().stream().map(btsEvent -> {
+            log.info("Processing started");
+            List<ProcessedEvent> locations = command.getEvents().stream().map(btsEvent -> {
                 final Timeout timeout = new Timeout(20, TimeUnit.SECONDS);
                 final Future<Object> future = Patterns.ask(command.getEventsActor(), new DecodeEvent(btsEvent), timeout);
                 try {
                     final DecodedEvent result = (DecodedEvent) Await.result(future, timeout.duration());
-                    return result.getLocation();
+                    return result.getEvent();
                 } catch (Exception e) {
-                    return new Place.ErrorPlace();
+                    return new ProcessedEvent(new Place.ErrorPlace(),null);
                 }
             }).collect(Collectors.toList());
+            log.info("Processing finished");
             getSender().tell(new EventsProcessed(locations), getSelf());
         }).build();
     }

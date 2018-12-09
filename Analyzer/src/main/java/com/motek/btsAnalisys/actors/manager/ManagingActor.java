@@ -12,6 +12,7 @@ import com.motek.btsAnalisys.actors.angel.AngelActor;
 import com.motek.btsAnalisys.actors.angel.commands.AddEvent;
 import com.motek.btsAnalisys.actors.angel.commands.KillYourself;
 import com.motek.btsAnalisys.actors.event.EventActor;
+import com.motek.btsAnalisys.actors.manager.commands.GetInfo;
 import com.motek.btsAnalisys.actors.manager.commands.PassEvent;
 import com.motek.btsAnalisys.actors.manager.commands.CreateAgent;
 import com.motek.btsAnalisys.actors.manager.commands.KillAgent;
@@ -41,6 +42,9 @@ public class ManagingActor extends AbstractActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
+                .match(GetInfo.class, getInfo -> {
+                    getSender().tell(questionaryActor,getSelf());
+                })
                 .match(CreateAgent.class, createEvent -> {
                     log.info("Received angel{" + createEvent.getId() + "] creation request");
                     context().actorSelection(createEvent.getId())
