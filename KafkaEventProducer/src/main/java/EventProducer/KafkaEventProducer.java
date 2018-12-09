@@ -1,9 +1,6 @@
 package EventProducer;
 
-import BTSEvents.BTSEvent;
-import BTSEvents.SomeBTSEvent;
-import BTSEvents.UserEntered;
-import BTSEvents.UserLeft;
+import BTSEvents.*;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -30,7 +27,8 @@ public class KafkaEventProducer {
 
     public void start() throws IOException, InterruptedException {
         String id = "abc";
-        List<BTSEvent> events = Arrays.asList(new UserEntered(id), new SomeBTSEvent(id), new SomeBTSEvent(id), new UserLeft(id));
+        List<BTSEvent> events = Arrays.asList(new EnteredBTSArea(id,19.934847,50.054043), new Sms(id,19.934847,50.054043),
+                new Sms(id,19.934847,50.054043), new LeftBTSArea(id,19.934847,50.054043));
 
         for(BTSEvent event : events){
             byte[] serializedEvent = serializeBTSEvent(event);

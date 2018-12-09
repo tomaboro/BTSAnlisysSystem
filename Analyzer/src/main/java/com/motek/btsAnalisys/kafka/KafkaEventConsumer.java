@@ -8,8 +8,6 @@ import java.util.Properties;
 import java.util.Arrays;
 
 import BTSEvents.BTSEvent;
-import BTSEvents.UserEntered;
-import BTSEvents.UserLeft;
 import akka.actor.ActorRef;
 import com.motek.btsAnalisys.actors.manager.commands.CreateAgent;
 import com.motek.btsAnalisys.actors.manager.commands.KillAgent;
@@ -62,6 +60,7 @@ public class KafkaEventConsumer {
                 //if(btsEvent instanceof SomeBTSEvent)
                 //    System.out.println("hurray");
 
+                /*
                 if(btsEvent instanceof UserEntered){
                     managingAgent.tell(new CreateAgent(btsEvent.getId()), ActorRef.noSender());
                 }
@@ -71,7 +70,7 @@ public class KafkaEventConsumer {
                 else{
                     managingAgent.tell(new PassEvent(btsEvent,btsEvent.getId()), ActorRef.noSender());
                 }
-
+*/
                 //System.out.printf("offset = %d, key = %s, value = %s\n",
                 //        record.offset(), record.key(), btsEvent.getId());
             }
