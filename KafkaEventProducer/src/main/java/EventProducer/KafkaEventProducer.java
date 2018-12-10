@@ -12,13 +12,10 @@ import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class KafkaEventProducer {
+public class KafkaEventProducer implements Runnable {
 
     private String topicName;
     private Properties props;
@@ -29,37 +26,41 @@ public class KafkaEventProducer {
         initialize();
     }
 
-    public void start() throws IOException, InterruptedException {
-        String id = "abc";
+    public void run() {
+        try {
+            String id = UUID.randomUUID().toString();
 
-        BTSEvent event;
+            BTSEvent event;
 
-        // Entry event
-        event = new UserEntered(id);
-        serializeAndSend(event,producer,topicName,5);
+            // Entry event
+            event = new UserEntered(id);
+            serializeAndSend(event, producer, topicName, 5);
 
 
-        // first location
-        Place randomPlace = Places.RandomEntryPlace();
-        event = new EnteredBTSArea(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
-        serializeAndSend(event,producer,topicName,5);
+            // first location
+            Place randomPlace = Places.RandomEntryPlace();
+            event = new EnteredBTSArea(id, randomPlace.getLocation().getLongitude(), randomPlace.getLocation().getLatitude(), LocalDateTime.now());
+            serializeAndSend(event, producer, topicName, 5);
 
-        //Normal events
-        for(int i = 0; i < 10; i++){
-            event = createRandomBTSEvent(id);
-            serializeAndSend(event,producer,topicName,3);
+            //Normal events
+            for (int i = 0; i < 10; i++) {
+                event = createRandomBTSEvent(id);
+                serializeAndSend(event, producer, topicName, 3);
+            }
+
+            // last location
+            randomPlace = Places.RandomEntryPlace();
+            event = new LeftBTSArea(id, randomPlace.getLocation().getLongitude(), randomPlace.getLocation().getLatitude(), LocalDateTime.now());
+            serializeAndSend(event, producer, topicName, 5);
+
+            // exit event
+            event = new UserExited(id);
+            serializeAndSend(event, producer, topicName, 5);
+
+            producer.close();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
-
-        // last location
-        randomPlace = Places.RandomEntryPlace();
-        event = new LeftBTSArea(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
-        serializeAndSend(event,producer,topicName,5);
-
-        // exit event
-        event = new UserExited(id);
-        serializeAndSend(event,producer,topicName,5);
-
-        producer.close();
     }
 
     private void initialize(){
@@ -118,7 +119,7 @@ public class KafkaEventProducer {
         byte[] serializedEvent = serializeBTSEvent(event);
         producer.send(new ProducerRecord<String, byte[]>(topicName,
                 event.getClass().toString(), serializedEvent));
-        System.out.println("Message sent successfully");
+        System.out.println(event.getId() + ": message sent successfully");
         TimeUnit.SECONDS.sleep(sleepTime);
     }
 
