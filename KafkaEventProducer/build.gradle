@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'com.kswider'
@@ -16,3 +17,5 @@ dependencies {
     compile group: 'org.apache.kafka', name: 'kafka_2.11', version: '2.0.1'
     compile project(":BTSEvents")
 }
+
+mainClassName = "EventProducer.Main"
