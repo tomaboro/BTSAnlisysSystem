@@ -7,7 +7,7 @@ public class Main {
         while(true) {
             KafkaEventProducer producer = new KafkaEventProducer("event-topic");
             new Thread(producer).start();
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         }
     }
 }

@@ -40,22 +40,22 @@ public class KafkaEventProducer implements Runnable {
             // first location
             Place randomPlace = Places.RandomEntryPlace();
             event = new EnteredBTSArea(id, randomPlace.getLocation().getLongitude(), randomPlace.getLocation().getLatitude(), LocalDateTime.now());
-            serializeAndSend(event, producer, topicName, 5);
+            serializeAndSend(event, producer, topicName, 2);
 
             //Normal events
             for (int i = 0; i < 10; i++) {
                 event = createRandomBTSEvent(id);
-                serializeAndSend(event, producer, topicName, 3);
+                serializeAndSend(event, producer, topicName, 2);
             }
 
             // last location
             randomPlace = Places.RandomEntryPlace();
             event = new LeftBTSArea(id, randomPlace.getLocation().getLongitude(), randomPlace.getLocation().getLatitude(), LocalDateTime.now());
-            serializeAndSend(event, producer, topicName, 5);
+            serializeAndSend(event, producer, topicName, 2);
 
             // exit event
             event = new UserExited(id);
-            serializeAndSend(event, producer, topicName, 5);
+            serializeAndSend(event, producer, topicName, 2);
 
             producer.close();
         } catch (IOException | InterruptedException e) {
@@ -106,11 +106,17 @@ public class KafkaEventProducer implements Runnable {
     static BTSEvent createRandomBTSEvent(String id){
         Place randomPlace = Places.RandomPlace();
         Random random = new Random();
-        switch (random.nextInt(2)){
+        switch (random.nextInt(5)){
             case 0:
                 return new PhoneCall(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
             case 1:
                 return new Sms(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
+            case 2:
+                return new EnteredBTSArea(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
+            case 3:
+                return new LeftBTSArea(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
+            case 4:
+                return new InternetUsage(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
         }
         return null;
     }
