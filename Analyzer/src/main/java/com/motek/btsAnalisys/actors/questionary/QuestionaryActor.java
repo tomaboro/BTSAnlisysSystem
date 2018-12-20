@@ -60,13 +60,13 @@ public class QuestionaryActor extends AbstractActor {
         return eventList.stream().filter(place -> {
             Place.LocationType type = place.getType();
             return type == Place.LocationType.monument;
-        }).collect(Collectors.groupingBy(Function.identity(), Collectors.counting())).size() > 5;
+        }).collect(Collectors.groupingBy(Function.identity(), Collectors.counting())).size() > 2;
     }
 
     private Boolean isParyting(List<ProcessedEvent> eventList) {
         return eventList.stream().filter(event ->
             event.getTime().getHour() > 0 && event.getTime().getHour() < 4 && event.getPlace().getType() == Place.LocationType.club
-        ).count() > 40;
+        ).count() > 2;
     }
 
     public static Props props() {

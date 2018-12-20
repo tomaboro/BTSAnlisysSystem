@@ -36,28 +36,28 @@ public class KafkaEventProducer implements Runnable {
 
             // Entry event
             event = new UserEntered(id);
-            serializeAndSend(event, producer, topicName, isDelayed ? 5 : 0);
+            serializeAndSend(event, producer, topicName, isDelayed ? 2 : 0);
 
 
             // first location
             Place randomPlace = Places.RandomEntryPlace();
             event = new EnteredBTSArea(id, randomPlace.getLocation().getLongitude(), randomPlace.getLocation().getLatitude(), LocalDateTime.now());
-            serializeAndSend(event, producer, topicName, 5);
+            serializeAndSend(event, producer, topicName, isDelayed ? 2 : 0);
 
             //Normal events
             for (int i = 0; i < 10; i++) {
                 event = createRandomBTSEvent(id);
-                serializeAndSend(event, producer, topicName, isDelayed ? 3 : 0);
+                serializeAndSend(event, producer, topicName, isDelayed ? 2 : 0);
             }
 
             // last location
             randomPlace = Places.RandomEntryPlace();
             event = new LeftBTSArea(id, randomPlace.getLocation().getLongitude(), randomPlace.getLocation().getLatitude(), LocalDateTime.now());
-            serializeAndSend(event, producer, topicName, isDelayed ? 5 : 0);
+            serializeAndSend(event, producer, topicName, isDelayed ? 2 : 0);
 
             // exit event
             event = new UserExited(id);
-            serializeAndSend(event, producer, topicName, isDelayed ? 5 : 0);
+            serializeAndSend(event, producer, topicName, isDelayed ? 2 : 0);
 
             producer.close();
         } catch (IOException | InterruptedException e) {
@@ -108,7 +108,7 @@ public class KafkaEventProducer implements Runnable {
     static BTSEvent createRandomBTSEvent(String id){
         Place randomPlace = Places.RandomPlace();
         Random random = new Random();
-        switch (random.nextInt(2)){
+        switch (random.nextInt(5)){
             case 0:
                 return new PhoneCall(id,randomPlace.getLocation().getLongitude(),randomPlace.getLocation().getLatitude(),LocalDateTime.now());
             case 1:
