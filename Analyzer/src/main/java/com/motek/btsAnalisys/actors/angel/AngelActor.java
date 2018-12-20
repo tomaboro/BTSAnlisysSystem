@@ -31,25 +31,23 @@ public class AngelActor extends AbstractActor {
 
     @Override
     public void preStart() {
-        log.info("Angel[" + id + "] actor started.");
+        log.info("Created!");
     }
 
     @Override
     public Receive createReceive() {
         return receiveBuilder()
                 .match(AddEvent.class, addEvent -> {
-                    log.info("Received new event: " + addEvent.getEvent().toString());
+                    log.info("A@" + id + ", " + addEvent.getEvent().toString() + ";");
                     events.add(addEvent.getEvent());
                 })
                 .match(KillYourself.class, kill -> {
-                    log.info("Started seasides process.");
                     questionaryActor = kill.getQuestionaryActor();
                     processorActor = getContext().actorOf(ProcessorActor.props());
                     processorActor.tell(new ProcessEvents(events,kill.getEventsActor()),getSelf());
                 })
                 .match(EventsProcessed.class, processedEvents -> {
                     if(questionaryActor != null) {
-                        log.info("Passing processed data to questionary agent and killing myself.");
                         questionaryActor.tell(new PrepareQuestionary(processedEvents.getEvents()), getSelf());
                         context().self().tell(PoisonPill.getInstance(), ActorRef.noSender());
                     }

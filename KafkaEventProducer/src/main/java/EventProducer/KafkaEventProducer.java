@@ -20,9 +20,11 @@ public class KafkaEventProducer implements Runnable {
     private String topicName;
     private Properties props;
     private Producer<String, byte[]> producer;
+    private boolean isDelayed;
 
-    public KafkaEventProducer(String topicName) {
+    public KafkaEventProducer(String topicName, boolean isDelayed) {
         this.topicName = topicName;
+        this.isDelayed = isDelayed;
         initialize();
     }
 
@@ -34,7 +36,7 @@ public class KafkaEventProducer implements Runnable {
 
             // Entry event
             event = new UserEntered(id);
-            serializeAndSend(event, producer, topicName, 5);
+            serializeAndSend(event, producer, topicName, isDelayed ? 5 : 0);
 
 
             // first location
@@ -45,17 +47,17 @@ public class KafkaEventProducer implements Runnable {
             //Normal events
             for (int i = 0; i < 10; i++) {
                 event = createRandomBTSEvent(id);
-                serializeAndSend(event, producer, topicName, 3);
+                serializeAndSend(event, producer, topicName, isDelayed ? 3 : 0);
             }
 
             // last location
             randomPlace = Places.RandomEntryPlace();
             event = new LeftBTSArea(id, randomPlace.getLocation().getLongitude(), randomPlace.getLocation().getLatitude(), LocalDateTime.now());
-            serializeAndSend(event, producer, topicName, 5);
+            serializeAndSend(event, producer, topicName, isDelayed ? 5 : 0);
 
             // exit event
             event = new UserExited(id);
-            serializeAndSend(event, producer, topicName, 5);
+            serializeAndSend(event, producer, topicName, isDelayed ? 5 : 0);
 
             producer.close();
         } catch (IOException | InterruptedException e) {

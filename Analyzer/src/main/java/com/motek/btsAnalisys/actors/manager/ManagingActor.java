@@ -46,7 +46,8 @@ public class ManagingActor extends AbstractActor {
                     getSender().tell(questionaryActor,getSelf());
                 })
                 .match(CreateAgent.class, createEvent -> {
-                    log.info("Received angel{" + createEvent.getId() + "] creation request");
+                    log.info("B, " + createEvent.getId() + ";");
+                    log.info("M, " + createEvent.getId() + ", Entered;");
                     context().actorSelection(createEvent.getId())
                             .resolveOne(new FiniteDuration(2, TimeUnit.SECONDS))
                             .onFailure(new OnFailure() {
@@ -57,7 +58,8 @@ public class ManagingActor extends AbstractActor {
 
                 })
                 .match(PassEvent.class, passEvent -> {
-                    log.info("Received event " + passEvent.getEvent() + " to pass to angel[" + passEvent.getAngelID() + "]");
+                    log.info("B, " + passEvent.getAngelID() + ";");
+                    log.info("M," + passEvent.getAngelID() + ", " + passEvent.getEvent().getName() + ";");
                     context().actorSelection("../" + managingAgentID + "/" + passEvent.getAngelID())
                             .resolveOne(new FiniteDuration(2, TimeUnit.SECONDS))
                             .onComplete(new OnComplete<ActorRef>() {
@@ -68,7 +70,8 @@ public class ManagingActor extends AbstractActor {
                             }, context().dispatcher());
                 })
                 .match(KillAgent.class, killEvent -> {
-                    log.info("Received angel[" + killEvent.getId() +  "] removal request");
+                    log.info("B, " + killEvent.getId() + ";");
+                    log.info("M, " + killEvent.getId() + ", Left;");
                     context().actorSelection(killEvent.getId())
                             .resolveOne(new FiniteDuration(2, TimeUnit.SECONDS))
                             .onComplete(new OnComplete<ActorRef>() {

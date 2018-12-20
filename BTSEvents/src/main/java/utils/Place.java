@@ -20,4 +20,9 @@ public class Place {
             super(new SimpleLocation(-1,-1),LocationType.error, "");
         }
     }
+
+    @Override
+    public String toString() {
+        return type.name() + ", " + name;
+    }
 }

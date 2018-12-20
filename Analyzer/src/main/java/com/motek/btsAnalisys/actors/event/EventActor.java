@@ -15,14 +15,11 @@ public class EventActor extends AbstractLoggingActor {
     private LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
     @Override
-    public void preStart() {
-        log.info("Event actor started.");
-    }
+    public void preStart() { }
 
     @Override
     public Receive createReceive() {
         return receiveBuilder().match(DecodeEvent.class, decodeEvent -> {
-            log.info("Decoding event: " + decodeEvent.getEvent().toString());
             SimpleLocation location = new SimpleLocation((long) decodeEvent.getEvent().getLatitude(),(long) decodeEvent.getEvent().getLongitude());
             Place place;
             if((place = Places.airports.stream().filter(x -> x.getLocation().equals(location)).findFirst().orElse(null)) != null) { }
@@ -33,6 +30,7 @@ public class EventActor extends AbstractLoggingActor {
             else {
                 place = new Place(location, Place.LocationType.unknown, "");
             }
+            log.info("E, " + decodeEvent.getEvent().toString() + ", " + place.toString() + ";");
             getSender().tell(new DecodedEvent(new ProcessedEvent(place,decodeEvent.getEvent().getLocalDateTime())),getSelf());
         }).build();
     }

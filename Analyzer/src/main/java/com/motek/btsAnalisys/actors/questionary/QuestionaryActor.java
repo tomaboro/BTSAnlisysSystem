@@ -20,9 +20,7 @@ public class QuestionaryActor extends AbstractActor {
     private List<Questionary> questionaries = new ArrayList<>();
 
     @Override
-    public void preStart() {
-        log.info("Questionary actor started.");
-    }
+    public void preStart() { }
 
     @Override
     public Receive createReceive() {
@@ -31,11 +29,13 @@ public class QuestionaryActor extends AbstractActor {
                     getSender().tell(questionaries,getSelf());
                 })
                 .match(PrepareQuestionary.class, request -> {
-                    log.info("Questionary processing started.");
                     List<Place> places = request.getEvents().stream().map(ProcessedEvent::getPlace).collect(Collectors.toList());
                     Questionary questionary = new Questionary(isTourist(places),!isTourist(places),findArrivalType(places),isParyting(request.getEvents()));
                     questionaries.add(questionary);
-                    log.info("Questionary result: " + questionary.toString());
+                    log.info("Q, " + "[Processed Events List], " + questionary.getIsTourist() + ";");
+                    log.info("Q, " + "[Processed Events List], " +  questionary.getIsTourist() + ", " + questionary.getArrivalType() + ";");
+                    log.info("Q, " + "[Processed Events List], " + questionary.getIsTourist() + ", " + questionary.getArrivalType() + ", " + questionary.getWasPartying() + ";");
+                    log.error(String.valueOf(System.currentTimeMillis()));
                 })
                 .build();
     }

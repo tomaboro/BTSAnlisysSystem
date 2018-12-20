@@ -7,6 +7,11 @@ import java.time.LocalDateTime;
 
 public class UserEntered extends BTSEvent implements Serializable {
 
+    @Override
+    public String getName() {
+        return "ENTER";
+    }
+
     public UserEntered(@JsonProperty("id") String id) {
         super(id);
     }

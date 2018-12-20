@@ -25,14 +25,12 @@ public class ProcessorActor extends AbstractActor {
     private LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
     @Override
-    public void preStart() {
-        log.info("Processing actor started.");
-    }
+    public void preStart() { }
 
     @Override
     public Receive createReceive() {
         return receiveBuilder().match(ProcessEvents.class, command -> {
-            log.info("Processing started");
+            log.info("P, [Events List];");
             List<ProcessedEvent> locations = command.getEvents().stream().map(btsEvent -> {
                 final Timeout timeout = new Timeout(20, TimeUnit.SECONDS);
                 final Future<Object> future = Patterns.ask(command.getEventsActor(), new DecodeEvent(btsEvent), timeout);
@@ -43,7 +41,6 @@ public class ProcessorActor extends AbstractActor {
                     return new ProcessedEvent(new Place.ErrorPlace(),null);
                 }
             }).collect(Collectors.toList());
-            log.info("Processing finished");
             getSender().tell(new EventsProcessed(locations), getSelf());
         }).build();
     }
